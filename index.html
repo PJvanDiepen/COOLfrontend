@@ -5,8 +5,11 @@
     <title>Ranglijst Waagtoren 2018-2019</title>
 </head>
 <body>
-    <h1>Ranglijst Waagtoren 2018-2019</h1>
-    <input type="button" value="Generate a table." onclick="generate_table()">
+    <h1>Seizoen</h1>
+    <select id="seizoenen" onchange="anderSeizoen()">
+        <option value="0000">-- seizoen --</option>
+    </select>
+    <h1>Ranglijst Waagtoren</h1>
     <table id="ranglijst">
         <tr>
             <th>knsbNummer</th>
