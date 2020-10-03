@@ -13,7 +13,7 @@ function appendOption(parent, value, text) {
     return parent.appendChild(option);
 }
 
-function rij(kolommen) {
+function rij(...kolommen) {
     let tr = createNode('tr');
     kolommen.map(kolom => {
         let td = createNode('td');
@@ -35,7 +35,7 @@ function anderSeizoen() {
 }
 
 function geenRanglijst() {
-    while (tabel.childNodes.length > 1) {
+    while (tabel.childNodes.length > 2) {
         tabel.removeChild(tabel.lastChild);
     }
 }
@@ -46,8 +46,8 @@ function ranglijst(seizoen) {
     fetch(url + seizoen)
         .then(response => response.json())
         .then(spelers => {
-            spelers.map(speler => {
-                append(tabel, rij([speler.knsbNummer, speler.naam, speler.totaal]));
+            spelers.map((speler, index) => {
+                append(tabel, rij(index+1, speler.knsbNummer, speler.naam, speler.totaal));
             });
         });
 }
