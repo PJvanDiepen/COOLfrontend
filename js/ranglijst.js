@@ -1,26 +1,26 @@
-function createNode(element) {
-    return document.createElement(element);
-}
+const seizoenen = document.getElementById("seizoenen");
+seizoenen.appendChild(option("1819", "2018-2019"));
+seizoenen.appendChild(option("1920", "2019-2020"));
+seizoenen.appendChild(option("2021", "2020-2021"));
+let seizoen = seizoenen.value;
 
-function append(parent, element) {
-    return parent.appendChild(element);
-}
+const url = "http://localhost:3000/ranglijst/";
 
-function appendOption(parent, value, text) {
-    let option = createNode('option');
+const tabel = document.getElementById("ranglijst");
+tabel.setAttribute("border", "1");
+
+// https://developer.mozilla.org/en-US/docs/Web/API/Window/location
+
+alert("The URL of this page is: " + window.location.href);
+const htmlBestanden = "/COOLfrontend";
+const link = document.getElementById("link");
+link.appendChild(naarSpeler(6212404, "ik zei de gek"));
+
+function option(value, text) {
+    let option = document.createElement('option');
     option.value = value;
     option.text = text;
-    return parent.appendChild(option);
-}
-
-function rij(...kolommen) {
-    let tr = createNode('tr');
-    kolommen.map(kolom => {
-        let td = createNode('td');
-        td.innerHTML = kolom;
-        append(tr, td);
-    });
-    return tr;
+    return option;
 }
 
 // https://stackoverflow.com/questions/43420870/responding-to-onclick-in-a-select-html-element/43420910
@@ -28,9 +28,9 @@ function rij(...kolommen) {
 
 function anderSeizoen() {
     geenRanglijst();
-    let seizoen = seizoenen.value;
+    seizoen = seizoenen.value;
     if (seizoen != "0000") {
-        ranglijst(seizoen);
+        ranglijst();
     }
 }
 
@@ -40,26 +40,35 @@ function geenRanglijst() {
     }
 }
 
+
 // https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Client-side_web_APIs/Fetching_data
 
-function ranglijst(seizoen) {
+function ranglijst() {
     fetch(url + seizoen)
         .then(response => response.json())
         .then(spelers => {
             spelers.map((speler, index) => {
-                append(tabel, rij(index+1, speler.knsbNummer, speler.naam, speler.totaal));
+                tabel.appendChild(rij(index+1, speler.knsbNummer, speler.naam, speler.totaal));
             });
         });
 }
 
-//  ¯\_(ツ)_/¯
+function rij(...kolommen) {
+    let tr = document.createElement('tr');
+    kolommen.map(kolom => {
+        let td = document.createElement('td');
+        td.innerHTML = kolom;
+        tr.appendChild(td);
+    });
+    return tr;
+}
 
-const seizoenen = document.getElementById("seizoenen");
-appendOption(seizoenen, "1819", "2018-2019");
-appendOption(seizoenen, "1920", "2019-2020");
-appendOption(seizoenen, "2021", "2020-2021");
+// https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Identifying_resources_on_the_Web
+// https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams
 
-const url = "http://localhost:3000/ranglijst/";
-
-const tabel = document.getElementById("ranglijst");
-tabel.setAttribute("border", "1");
+function naarSpeler(knsbNummer, naam) {
+    let link = document.createElement('a');
+    link.href = htmlBestanden + '/speler.html?seizoen=' + seizoen + '&speler=' + knsbNummer + '&naam=' + naam;
+    link.text = naam;
+    return link;
+}
