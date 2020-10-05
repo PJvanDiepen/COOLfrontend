@@ -1,14 +1,20 @@
 const seizoenen = document.getElementById("seizoenen");
+const geenSeizoen = seizoenen.valueOf();
 seizoenen.appendChild(option("1819", "2018-2019"));
 seizoenen.appendChild(option("1920", "2019-2020"));
 seizoenen.appendChild(option("2021", "2020-2021"));
-const geenSeizoen = seizoenen.valueOf();
-let seizoen = geenSeizoen;
+let seizoen = localStorage.getItem("seizoen");
+console.log("Seizoen: " + seizoen);
+seizoenen.value = seizoen;
 
 const url = "http://localhost:3000/ranglijst/";
 
 const tabel = document.getElementById("ranglijst");
 tabel.setAttribute("border", "1");
+window.addEventListener('load', (event) => {
+    console.log('The page has fully loaded: ' + seizoen);
+    anderSeizoen();
+});
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Window/location
 // https://www.geeksforgeeks.org/how-to-get-the-file-name-from-full-path-using-javascript/
@@ -29,6 +35,7 @@ function option(value, text) {
 function anderSeizoen() {
     geenRanglijst();
     seizoen = seizoenen.value;
+    localStorage.setItem("seizoen", seizoen);
     if (seizoen != geenSeizoen) {
         ranglijst();
     }
@@ -43,11 +50,11 @@ function geenRanglijst() {
 // https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Client-side_web_APIs/Fetching_data
 
 function ranglijst() {
+    console.log("ranglijst seizoen=" + seizoen);
     fetch(url + seizoen)
         .then(response => response.json())
         .then(spelers => {
             spelers.map((speler, index) => {
-                // tabel.appendChild(rij(index+1, speler.naam, speler.totaal));
                 tabel.appendChild(rij(index+1, naarSpeler(speler.knsbNummer, speler.naam), speler.totaal));
             });
         });
