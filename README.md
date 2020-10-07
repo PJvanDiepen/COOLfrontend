@@ -1,8 +1,6 @@
 # COOLfrontend
 
-Frontend for www.ChessOpenings.OnLine
+Frontend for www.0-0-0.nl
 
-- Alle gebruikers zien de Dummy records
-- Gebruiker moet zich aanmelden
-- Bekende gebruiker mag Dummy records toevoegen en bijwerken.
-- Nieuwe gebruiker moet zich per e-mail aan pvdiepen@gmail.nl bekend maken.
+- Voorlopig alleen ranglijst van de schaakvereniging de Waagtoren
+- Link naar www.aaappp.nl

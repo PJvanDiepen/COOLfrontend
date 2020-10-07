@@ -1,25 +1,29 @@
+"use strict";
+
 const seizoenen = document.getElementById("seizoenen");
 const geenSeizoen = seizoenen.valueOf();
 seizoenen.appendChild(option("1819", "2018-2019"));
 seizoenen.appendChild(option("1920", "2019-2020"));
 seizoenen.appendChild(option("2021", "2020-2021"));
 let seizoen = localStorage.getItem("seizoen");
-console.log("Seizoen: " + seizoen);
 seizoenen.value = seizoen;
+seizoenen.addEventListener("click", anderSeizoen);
 
 const url = "http://localhost:3000/ranglijst/";
 
 const tabel = document.getElementById("ranglijst");
 tabel.setAttribute("border", "1");
-window.addEventListener('load', (event) => {
-    console.log('The page has fully loaded: ' + seizoen);
-    anderSeizoen();
-});
+window.addEventListener('load', anderSeizoen);
 
-// https://developer.mozilla.org/en-US/docs/Web/API/Window/location
-// https://www.geeksforgeeks.org/how-to-get-the-file-name-from-full-path-using-javascript/
-// alert("The URL of this page is: " + window.location.href);
+// https://developer.mozilla.org/en-US/docs/Web/API/URL
 
+let href = new URL(location.href);
+console.log("pathname: " + href.pathname);
+console.log("hostname: " + href.hostname);
+console.log("searchParams: " + href.searchParams);
+console.log("href: " + href.href);
+
+// console.log("path: " + href.substring( 0, href.lastIndexOf( "/" ) + 1));
 const htmlBestanden = "/COOLfrontend"; // TODO niet hard coderen
 
 function option(value, text) {
@@ -28,9 +32,6 @@ function option(value, text) {
     option.text = text;
     return option;
 }
-
-// https://stackoverflow.com/questions/43420870/responding-to-onclick-in-a-select-html-element/43420910
-// TODO eventlistner i.p.v. onchange
 
 function anderSeizoen() {
     geenRanglijst();
