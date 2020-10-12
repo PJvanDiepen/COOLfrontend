@@ -11,19 +11,24 @@ const url = "http://localhost:3000";
 const tabel = document.getElementById("uitslagen");
 uitslagenlijst();
 
-// https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Client-side_web_APIs/Fetching_data
-
-//{"datum":"2018-09-10T22:00:00.000Z","rondeNummer":1,"witZwart":"z","naam":"Kiek Schouten","resultaat":"½","teamCode":"int","tegenstander":"","plaats":"Alkmaar","punten":7}
-
 function uitslagenlijst() {
     console.log(`uitslagenlijst seizoen=${seizoen} speler=${speler}`);
     fetch(url + "/uitslagen/" + seizoen + "/" + speler)
         .then(response => response.json())
         .then(uitslagen => {
             uitslagen.map((u) => {
-                tabel.appendChild(rij(u.datum, u.rondeNummer, u.witZwart, u.naam, u.resultaat, u.teamCode, u.tegenstander, u.plaats, u.punten));
+                tabel.appendChild(rij(datumLeesbaar(u.datum), u.rondeNummer, u.witZwart, u.naam, u.resultaat, u.teamCode, u.tegenstander, u.plaats, u.punten));
             });
         });
+}
+
+function datumLeesbaar(datumJson) {
+    const d = new Date(datumJson);
+    return voorloopNul(d.getDate()) + "-" + voorloopNul(d.getMonth()+1) + "-" + d.getFullYear();
+}
+
+function voorloopNul(getal) {
+    return getal < 10 ? '0'+getal : getal;
 }
 
 function rij(...kolommen) {
