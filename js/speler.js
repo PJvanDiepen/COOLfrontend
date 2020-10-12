@@ -17,7 +17,7 @@ uitslagenlijst();
 //{"datum":"2018-09-10T22:00:00.000Z","rondeNummer":1,"witZwart":"z","naam":"Kiek Schouten","resultaat":"½","teamCode":"int","tegenstander":"","plaats":"Alkmaar","punten":7}
 
 function uitslagenlijst() {
-    console.log("ranglijst seizoen=" + seizoen);
+    console.log(`uitslagenlijst seizoen=${seizoen} speler=${speler}`);
     fetch(url + seizoen + "/" + speler)
         .then(response => response.json())
         .then(uitslagen => {
@@ -32,7 +32,7 @@ function rij(...kolommen) {
     kolommen.map(kolom => {
         let td = document.createElement('td');
         if (kolom.nodeType === Node.ELEMENT_NODE) {
-            td.appendChild(kolom);  // ranglijst.js
+            td.appendChild(kolom);  // zie ranglijst.js
         } else {
             td.innerHTML = kolom;
         }

@@ -1,43 +1,40 @@
 "use strict";
 
-const seizoenen = document.getElementById("seizoenen");
-const geenSeizoen = seizoenen.valueOf();
-seizoenen.appendChild(option("1819", "2018-2019"));
-seizoenen.appendChild(option("1920", "2019-2020"));
-seizoenen.appendChild(option("2021", "2020-2021"));
-let seizoen = localStorage.getItem("seizoen");
-seizoenen.value = seizoen;
-seizoenen.addEventListener("click", anderSeizoen);
+const url = "http://localhost:3000";
 
-const url = "http://localhost:3000/ranglijst/";
+const seizoenSelecteren = document.getElementById("seizoenSelecteren");
+const geenSeizoen = seizoenSelecteren.value;
+let seizoen = localStorage.getItem("seizoen");
+verwerkSeizoenen();
+seizoenSelecteren.addEventListener("change", anderSeizoen);
 
 const tabel = document.getElementById("ranglijst");
 tabel.setAttribute("border", "1");
-window.addEventListener('load', anderSeizoen);
 
 // https://developer.mozilla.org/en-US/docs/Web/API/URL
-
 let href = new URL(location.href);
-console.log("pathname: " + href.pathname);
-console.log("hostname: " + href.hostname);
-console.log("searchParams: " + href.searchParams);
-console.log("href: " + href.href);
+const naarSpeler = href.pathname.replace("ranglijst.html","speler.html");
+ranglijst();
 
-// console.log("path: " + href.substring( 0, href.lastIndexOf( "/" ) + 1));
-const htmlBestanden = "/COOLfrontend"; // TODO niet hard coderen
+function verwerkSeizoenen() {
+    fetch(url + "/seizoenen")
+        .then(response => response.json())
+        .then(seizoenen => {
+            seizoenen.map((seizoen) => {
+                seizoenSelecteren.appendChild(option(seizoen.seizoen, seizoenVoluit(seizoen.seizoen)));
+            });
+        });
+}
 
-function option(value, text) {
-    let option = document.createElement('option');
-    option.value = value;
-    option.text = text;
-    return option;
+function seizoenVoluit(seizoen) {
+    return "20" + seizoen.substring(0,2) + "-20" +  seizoen.substring(2,4);
 }
 
 function anderSeizoen() {
     geenRanglijst();
-    seizoen = seizoenen.value;
+    seizoen = seizoenSelecteren.value;
     localStorage.setItem("seizoen", seizoen);
-    if (seizoen != geenSeizoen) {
+    if (seizoen !== geenSeizoen) {
         ranglijst();
     }
 }
@@ -48,17 +45,23 @@ function geenRanglijst() {
     }
 }
 
-// https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Client-side_web_APIs/Fetching_data
+// https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
 
 function ranglijst() {
-    console.log("ranglijst seizoen=" + seizoen);
-    fetch(url + seizoen)
+    fetch(url + "/ranglijst/" + seizoen)
         .then(response => response.json())
         .then(spelers => {
-            spelers.map((speler, index) => {
-                tabel.appendChild(rij(index+1, naarSpeler(speler.knsbNummer, speler.naam), speler.totaal));
+            spelers.map((speler, i) => {
+                tabel.appendChild(rij(i+1, hrefSpeler(speler.knsbNummer, speler.naam), speler.totaal));
             });
         });
+}
+
+function option(value, text) {
+    let option = document.createElement('option');
+    option.value = value;
+    option.text = text;
+    return option;
 }
 
 function rij(...kolommen) {
@@ -77,10 +80,10 @@ function rij(...kolommen) {
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Identifying_resources_on_the_Web
 
-function naarSpeler(knsbNummer, naam) {
+function hrefSpeler(knsbNummer, naam) {
     let a = document.createElement('a');
     a.appendChild(document.createTextNode(naam));
     a.title = naam;
-    a.href = htmlBestanden + '/speler.html?seizoen=' + seizoen + '&speler=' + knsbNummer + '&naam=' + naam;
+    a.href = `${naarSpeler}?seizoen=${seizoen}&speler=${knsbNummer}&naam=${naam}`;
     return a;
 }
