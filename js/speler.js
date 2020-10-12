@@ -6,10 +6,9 @@ naam.innerHTML = params.get('naam');
 let seizoen = params.get('seizoen');
 let speler = params.get('speler');
 
-const url = "http://localhost:3000/uitslagen/";
+const url = "http://localhost:3000";
 
 const tabel = document.getElementById("uitslagen");
-tabel.setAttribute("border", "1");
 uitslagenlijst();
 
 // https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Client-side_web_APIs/Fetching_data
@@ -18,7 +17,7 @@ uitslagenlijst();
 
 function uitslagenlijst() {
     console.log(`uitslagenlijst seizoen=${seizoen} speler=${speler}`);
-    fetch(url + seizoen + "/" + speler)
+    fetch(url + "/uitslagen/" + seizoen + "/" + speler)
         .then(response => response.json())
         .then(uitslagen => {
             uitslagen.map((u) => {
@@ -32,7 +31,7 @@ function rij(...kolommen) {
     kolommen.map(kolom => {
         let td = document.createElement('td');
         if (kolom.nodeType === Node.ELEMENT_NODE) {
-            td.appendChild(kolom);  // zie ranglijst.js
+            td.appendChild(kolom);
         } else {
             td.innerHTML = kolom;
         }

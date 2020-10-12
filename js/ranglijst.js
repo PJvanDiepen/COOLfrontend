@@ -2,26 +2,27 @@
 
 const url = "http://localhost:3000";
 
+const seizoenKop = document.getElementById("seizoen");
 const seizoenSelecteren = document.getElementById("seizoenSelecteren");
 const geenSeizoen = seizoenSelecteren.value;
 let seizoen = localStorage.getItem("seizoen");
-verwerkSeizoenen();
-seizoenSelecteren.addEventListener("change", anderSeizoen);
+seizoenOpties();
+seizoenSelecteren.addEventListener("input", anderSeizoen);
 
 const tabel = document.getElementById("ranglijst");
-tabel.setAttribute("border", "1");
 
 // https://developer.mozilla.org/en-US/docs/Web/API/URL
 let href = new URL(location.href);
 const naarSpeler = href.pathname.replace("ranglijst.html","speler.html");
 ranglijst();
 
-function verwerkSeizoenen() {
-    fetch(url + "/seizoenen")
+function seizoenOpties() {
+    fetch(url + "/seizoenen") // verschillende seizoenen in Speler tabel
         .then(response => response.json())
-        .then(seizoenen => {
-            seizoenen.map((seizoen) => {
-                seizoenSelecteren.appendChild(option(seizoen.seizoen, seizoenVoluit(seizoen.seizoen)));
+        .then(spelerSeizoenen => {
+            spelerSeizoenen.map(
+                (spelerSeizoen) => {
+                seizoenSelecteren.appendChild(option(spelerSeizoen.seizoen, seizoenVoluit(spelerSeizoen.seizoen)));
             });
         });
 }
@@ -40,6 +41,7 @@ function anderSeizoen() {
 }
 
 function geenRanglijst() {
+    seizoenKop.innerHTML = "Seizoen";
     while (tabel.childNodes.length > 2) {
         tabel.removeChild(tabel.lastChild);
     }
@@ -48,6 +50,7 @@ function geenRanglijst() {
 // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
 
 function ranglijst() {
+    seizoenKop.innerHTML = "Seizoen " + seizoenVoluit(seizoen);
     fetch(url + "/ranglijst/" + seizoen)
         .then(response => response.json())
         .then(spelers => {
