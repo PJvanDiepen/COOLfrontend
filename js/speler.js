@@ -11,16 +11,57 @@ const url = "http://localhost:3000";
 const tabel = document.getElementById("uitslagen");
 uitslagenlijst();
 
+/*
+  -- punten van alle uitslagen per speler
+  select u.datum,
+      u.rondeNummer,
+      u.bordNummer,
+      u.witZwart,
+      u.tegenstanderNummer,
+      p.naam,
+      u.resultaat,
+      u.teamCode,
+      r.compleet,
+      r.uithuis,
+      r.tegenstander,
+      punten(@seizoen, @knsbNummer, u.teamCode, u.tegenstanderNummer, u.resultaat) as punten
+  from uitslag u
+  join persoon p on u.tegenstanderNummer = p.knsbNummer
+  join ronde r on u.seizoen = r.seizoen and u.teamCode = r.teamCode and u.rondeNummer = r.rondeNummer
+  where u.seizoen = @seizoen
+      and u.knsbNummer = @knsbNummer
+      and u.anderTeam = 'int'
+  order by u.datum;
+
+ Fetch JSON uitslagen en verwerk die met uitslagRij tot rijen voor de uitslagen tabel.
+ */
 function uitslagenlijst() {
     console.log(`uitslagenlijst seizoen=${seizoen} speler=${speler}`);
+    let totaal = 0;
     fetch(url + "/uitslagen/" + seizoen + "/" + speler)
         .then(response => response.json())
         .then(uitslagen => {
             uitslagen.map((u) => {
-                tabel.appendChild(rij(datumLeesbaar(u.datum), u.rondeNummer, u.witZwart, u.naam, u.resultaat, u.teamCode, u.tegenstander, u.plaats, u.punten));
+                totaal = totaal + u.punten;
+                tabel.appendChild(rij(u.rondeNummer, datumLeesbaar(u.datum), u.naam, u.bordNummer, u.witZwart, u.resultaat, u.punten, totaal));
             });
         });
 }
+
+/*
+Verwerk een JSON uitslag tot een rij van 8 kolommen.
+
+1. interne ronde
+2. datum
+3. interne tegenstander, externe wedstrijd of andere tekst
+4. externe bord
+5. kleur
+6. resultaat
+7. punten
+8. voortschrijdend totaal
+
+@param u JSON uitslag
+ */
 
 function datumLeesbaar(datumJson) {
     const d = new Date(datumJson);
