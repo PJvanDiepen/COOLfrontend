@@ -1,6 +1,6 @@
-"use strict";
+'use strict'
 
-const url = "http://localhost:3000";
+const api = "http://localhost:3000";
 
 const seizoenKop = document.getElementById("seizoen");
 const seizoenSelecteren = document.getElementById("seizoenSelecteren");
@@ -10,14 +10,11 @@ seizoenOpties();
 seizoenSelecteren.addEventListener("input", anderSeizoen);
 
 const tabel = document.getElementById("ranglijst");
-
-// https://developer.mozilla.org/en-US/docs/Web/API/URL
-let href = new URL(location.href);
-const naarSpeler = href.pathname.replace("ranglijst.html","speler.html");
+const naarSpeler = new URL(location.href).pathname.replace("ranglijst.html","speler.html");
 ranglijst();
 
 function seizoenOpties() {
-    fetch(url + "/seizoenen") // verschillende seizoenen in Speler tabel
+    fetch(api + "/seizoenen") // verschillende seizoenen in Speler tabel
         .then(response => response.json())
         .then(spelerSeizoenen => {
             spelerSeizoenen.map(
@@ -51,11 +48,12 @@ function geenRanglijst() {
 
 function ranglijst() {
     seizoenKop.innerHTML = "Seizoen " + seizoenVoluit(seizoen);
-    fetch(url + "/ranglijst/" + seizoen)
+    fetch(api + "/ranglijst/" + seizoen)
         .then(response => response.json())
         .then(spelers => {
             spelers.map((speler, i) => {
-                tabel.appendChild(rij(i+1, hrefSpeler(speler.knsbNummer, speler.naam), speler.totaal));
+                let link = `${naarSpeler}?seizoen=${seizoen}&speler=${speler.knsbNummer}&naam=${speler.naam}`;
+                tabel.appendChild(rij(i+1, href(link, speler.naam), speler.totaal));
             });
         });
 }
@@ -81,12 +79,9 @@ function rij(...kolommen) {
     return tr;
 }
 
-// https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Identifying_resources_on_the_Web
-
-function hrefSpeler(knsbNummer, naam) {
+function href(link, text) {
     let a = document.createElement('a');
-    a.appendChild(document.createTextNode(naam));
-    a.title = naam;
-    a.href = `${naarSpeler}?seizoen=${seizoen}&speler=${knsbNummer}&naam=${naam}`;
+    a.appendChild(document.createTextNode(text));
+    a.href = link;
     return a;
 }

@@ -1,17 +1,37 @@
-// https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams
+'use strict'
 
 const params = (new URL(document.location)).searchParams;
 const naam = document.getElementById("naam");
 naam.innerHTML = params.get('naam');
-let seizoen = params.get('seizoen');
-let speler = params.get('speler');
+const seizoen = params.get('seizoen');
+const speler = params.get('speler'); // knsbNummer
 
-const url = "http://localhost:3000";
+const api = "http://localhost:3000";
 
 const tabel = document.getElementById("uitslagen");
+const naarSpeler = new URL(location.href).pathname;
+const naarTeam = naarSpeler.replace("speler.html","team.html");
 uitslagenlijst();
 
 /*
+ Fetch JSON uitslagen en verwerk die met uitslagRij tot rijen voor de uitslagen tabel.
+ */
+function uitslagenlijst() {
+    console.log(`uitslagenlijst seizoen=${seizoen} speler=${speler}`);
+    let totaal = 0;
+    fetch(api + "/uitslagen/" + seizoen + "/" + speler)
+        .then(response => response.json())
+        .then(uitslagen => {
+            uitslagen.map((uitslag) => {
+                totaal = totaal + uitslag.punten;
+                tabel.appendChild(uitslagRij(uitslag, totaal));
+            });
+        });
+}
+
+/*
+Verwerk een JSON uitslag tot een rij van 8 kolommen.
+
   -- punten van alle uitslagen per speler
   select u.datum,
       u.rondeNummer,
@@ -33,24 +53,6 @@ uitslagenlijst();
       and u.anderTeam = 'int'
   order by u.datum;
 
- Fetch JSON uitslagen en verwerk die met uitslagRij tot rijen voor de uitslagen tabel.
- */
-function uitslagenlijst() {
-    console.log(`uitslagenlijst seizoen=${seizoen} speler=${speler}`);
-    let totaal = 0;
-    fetch(url + "/uitslagen/" + seizoen + "/" + speler)
-        .then(response => response.json())
-        .then(uitslagen => {
-            uitslagen.map((u) => {
-                totaal = totaal + u.punten;
-                tabel.appendChild(rij(u.rondeNummer, datumLeesbaar(u.datum), u.naam, u.bordNummer, u.witZwart, u.resultaat, u.punten, totaal));
-            });
-        });
-}
-
-/*
-Verwerk een JSON uitslag tot een rij van 8 kolommen.
-
 1. interne ronde
 2. datum
 3. interne tegenstander, externe wedstrijd of andere tekst
@@ -61,7 +63,22 @@ Verwerk een JSON uitslag tot een rij van 8 kolommen.
 8. voortschrijdend totaal
 
 @param u JSON uitslag
+@param totaal punten
  */
+function uitslagRij(u, totaal) {
+    const datum = datumLeesbaar(u.datum);
+    if (u.tegenstanderNummer > TIJDELIJK_LID_NUMMER) {
+        let link = `${naarSpeler}?seizoen=${seizoen}&speler=${u.tegenstanderNummer}&naam=${u.naam}`;
+        return rij(u.rondeNummer, datum, href(link, u.naam), "", u.witZwart, u.resultaat, u.punten, totaal);
+    } else if (u.teamCode === 'int') {
+        return rij(u.rondeNummer, datum, u.naam, "", "", "", u.punten, totaal);
+    } else {
+        let link = `${naarTeam}?seizoen=${seizoen}&team=${u.teamCode}&ronde=${u.rondeNummer}`;
+        return rij("", datum, href(link, u.tegenstander), u.bordNummer, u.witZwart, u.resultaat, u.punten, totaal);
+    }
+}
+
+const TIJDELIJK_LID_NUMMER = 100;
 
 function datumLeesbaar(datumJson) {
     const d = new Date(datumJson);
@@ -84,4 +101,19 @@ function rij(...kolommen) {
         tr.appendChild(td);
     });
     return tr;
+}
+
+function hrefSpeler(knsbNummer, naam) {
+    let a = document.createElement('a');
+    a.appendChild(document.createTextNode(naam));
+    a.title = naam;
+    a.href = `${naarSpeler}?seizoen=${seizoen}&speler=${knsbNummer}&naam=${naam}`;
+    return a;
+}
+
+function href(link, text) {
+    let a = document.createElement('a');
+    a.appendChild(document.createTextNode(text));
+    a.href = link;
+    return a;
 }
