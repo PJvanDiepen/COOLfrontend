@@ -1,6 +1,27 @@
 'use strict'
 
+/*
+ranglijst.html:
+- h1 id="ranglijst"
+- select id="seizoenSelecteren"
+- h1 id="seizoen"
+- table id="spelers"
+
+URL searchParams:
+- schaakVereniging
+
+in localStarage:
+- schaakVereniging
+- seizoen
+ */
+const params = (new URL(document.location)).searchParams;
+const schaakVereniging = params.get('schaakVereniging');
+localStorage.setItem("schaakVereniging", schaakVereniging);
+
 const api = "http://localhost:3000";
+
+const ranglijstKop = document.getElementById("ranglijst");
+ranglijstKop.innerHTML = "Ranglijst " + schaakVereniging;
 
 const seizoenKop = document.getElementById("seizoen");
 const seizoenSelecteren = document.getElementById("seizoenSelecteren");
@@ -9,7 +30,7 @@ let seizoen = localStorage.getItem("seizoen");
 seizoenOpties();
 seizoenSelecteren.addEventListener("input", anderSeizoen);
 
-const tabel = document.getElementById("ranglijst");
+const tabel = document.getElementById("spelers");
 const naarSpeler = new URL(location.href).pathname.replace("ranglijst.html","speler.html");
 ranglijst();
 
@@ -52,7 +73,7 @@ function ranglijst() {
         .then(response => response.json())
         .then(spelers => {
             spelers.map((speler, i) => {
-                let link = `${naarSpeler}?seizoen=${seizoen}&speler=${speler.knsbNummer}&naam=${speler.naam}`;
+                let link = `${naarSpeler}?speler=${speler.knsbNummer}&naam=${speler.naam}`;
                 tabel.appendChild(rij(i+1, href(link, speler.naam), speler.totaal));
             });
         });

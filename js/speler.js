@@ -1,10 +1,24 @@
 'use strict'
 
+/*
+speler.html:
+- h1 id="naam"
+- table id="uitslagen"
+
+URL searchParams:
+- speler
+- naam
+
+in localStarage:
+- schaakVereniging
+- seizoen
+ */
 const params = (new URL(document.location)).searchParams;
 const naam = document.getElementById("naam");
 naam.innerHTML = params.get('naam');
-const seizoen = params.get('seizoen');
 const speler = params.get('speler'); // knsbNummer
+const schaakVereniging = localStorage.getItem("schaakVereniging");
+const seizoen = localStorage.getItem("seizoen")
 
 const api = "http://localhost:3000";
 
@@ -68,13 +82,15 @@ Verwerk een JSON uitslag tot een rij van 8 kolommen.
 function uitslagRij(u, totaal) {
     const datum = datumLeesbaar(u.datum);
     if (u.tegenstanderNummer > TIJDELIJK_LID_NUMMER) {
-        let link = `${naarSpeler}?seizoen=${seizoen}&speler=${u.tegenstanderNummer}&naam=${u.naam}`;
+        let link = `${naarSpeler}?speler=${u.tegenstanderNummer}&naam=${u.naam}`;
         return rij(u.rondeNummer, datum, href(link, u.naam), "", u.witZwart, u.resultaat, u.punten, totaal);
     } else if (u.teamCode === 'int') {
         return rij(u.rondeNummer, datum, u.naam, "", "", "", u.punten, totaal);
     } else {
-        let link = `${naarTeam}?seizoen=${seizoen}&team=${u.teamCode}&ronde=${u.rondeNummer}`;
-        return rij("", datum, href(link, u.tegenstander), u.bordNummer, u.witZwart, u.resultaat, u.punten, totaal);
+        let link = `${naarTeam}?team=${u.teamCode}&ronde=${u.rondeNummer}`;
+        let thuis = u.uithuis === 't' ? teamVoluit(u.teamCode) : u.tegenstander;
+        let uit = u.uithuis === 'u' ? teamVoluit(u.teamCode) : u.tegenstander;
+        return rij("", datum, href(link, thuis + " - " + uit), u.bordNummer, u.witZwart, u.resultaat, u.punten, totaal);
     }
 }
 
@@ -89,6 +105,10 @@ function voorloopNul(getal) {
     return getal < 10 ? '0'+getal : getal;
 }
 
+function teamVoluit(teamCode) {
+    return schaakVereniging + " " + teamCode;
+}
+
 function rij(...kolommen) {
     let tr = document.createElement('tr');
     kolommen.map(kolom => {
@@ -101,14 +121,6 @@ function rij(...kolommen) {
         tr.appendChild(td);
     });
     return tr;
-}
-
-function hrefSpeler(knsbNummer, naam) {
-    let a = document.createElement('a');
-    a.appendChild(document.createTextNode(naam));
-    a.title = naam;
-    a.href = `${naarSpeler}?seizoen=${seizoen}&speler=${knsbNummer}&naam=${naam}`;
-    return a;
 }
 
 function href(link, text) {
