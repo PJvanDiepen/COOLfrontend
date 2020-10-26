@@ -1,12 +1,10 @@
 'use strict'
 
 /*
-Uitslagen per team
+Uitslagen per ronde van de interne competitie
 
-TODO alle uitslagen of per ronde
-
-team.html:
-- h1 id="team"
+ronde.html:
+- h1 id="ronde"
 - table id="uitslagen"
 
 URL searchParams:

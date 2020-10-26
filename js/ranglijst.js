@@ -1,6 +1,8 @@
 'use strict'
 
 /*
+Ranglijst per seizoen
+
 ranglijst.html:
 - h1 id="ranglijst"
 - select id="seizoenSelecteren"
@@ -66,17 +68,25 @@ function geenRanglijst() {
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+// https://www.javascripttutorial.net/javascript-fetch-api/
+
+async function asyncFetch(url) {
+    console.log(`asyncFetch(${url}) begin`);
+    let response = await fetch(url);
+    let spelers = await response.json();
+    console.log(response.status); // 200
+    spelers.map((speler, i) => {
+        let link = `${naarSpeler}?speler=${speler.knsbNummer}&naam=${speler.naam}`;
+        tabel.appendChild(rij(i + 1, href(link, speler.naam), speler.totaal));
+    });
+    console.log(`asyncFetch(${url}) einde`);
+}
 
 function ranglijst() {
     seizoenKop.innerHTML = "Seizoen " + seizoenVoluit(seizoen);
-    fetch(api + "/ranglijst/" + seizoen)
-        .then(response => response.json())
-        .then(spelers => {
-            spelers.map((speler, i) => {
-                let link = `${naarSpeler}?speler=${speler.knsbNummer}&naam=${speler.naam}`;
-                tabel.appendChild(rij(i+1, href(link, speler.naam), speler.totaal));
-            });
-        });
+    console.log("ranglijst begin");
+    asyncFetch(api + "/ranglijst/" + seizoen);
+    console.log("ranglijst einde");
 }
 
 function option(value, text) {

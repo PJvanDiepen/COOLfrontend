@@ -1,6 +1,8 @@
 'use strict'
 
 /*
+Uitslagen en kalender per speler
+
 speler.html:
 - h1 id="naam"
 - table id="uitslagen"
@@ -13,17 +15,18 @@ in localStarage:
 - schaakVereniging
 - seizoen
  */
-const params = (new URL(document.location)).searchParams;
+const url = new URL(location);
+const api = url.host.match("localhost") ? "http://localhost:3000" : "https://chessopenings.online";
+
+const params = url.searchParams;
 const naam = document.getElementById("naam");
 naam.innerHTML = params.get('naam');
 const speler = params.get('speler'); // knsbNummer
 const schaakVereniging = localStorage.getItem("schaakVereniging");
 const seizoen = localStorage.getItem("seizoen")
 
-const api = "http://localhost:3000";
-
 const tabel = document.getElementById("uitslagen");
-const naarSpeler = new URL(location.href).pathname;
+const naarSpeler = url.pathname;
 const naarTeam = naarSpeler.replace("speler.html","team.html");
 uitslagenlijst();
 
@@ -32,7 +35,7 @@ uitslagenlijst();
  */
 function uitslagenlijst() {
     console.log(`uitslagenlijst seizoen=${seizoen} speler=${speler}`);
-    let totaal = 0;
+    let totaal = 300;
     fetch(api + "/uitslagen/" + seizoen + "/" + speler)
         .then(response => response.json())
         .then(uitslagen => {
@@ -46,7 +49,7 @@ function uitslagenlijst() {
 /*
 Verwerk een JSON uitslag tot een rij van 8 kolommen.
 
-  -- punten van alle uitslagen per speler
+-- punten van alle uitslagen per speler
   select u.datum,
       u.rondeNummer,
       u.bordNummer,
@@ -65,7 +68,7 @@ Verwerk een JSON uitslag tot een rij van 8 kolommen.
   where u.seizoen = @seizoen
       and u.knsbNummer = @knsbNummer
       and u.anderTeam = 'int'
-  order by u.datum;
+  order by u.datum, u.bordNummer;
 
 1. interne ronde
 2. datum
@@ -106,7 +109,7 @@ function voorloopNul(getal) {
 }
 
 function teamVoluit(teamCode) {
-    return schaakVereniging + " " + teamCode;
+    return schaakVereniging + (teamCode.substring(1) === 'be' ? " " : " " + teamCode);
 }
 
 function rij(...kolommen) {

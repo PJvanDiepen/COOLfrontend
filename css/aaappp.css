@@ -15,7 +15,7 @@ table, th, td, hr {
    border: 1px solid maroon;
 }
 
-tr, td {
+th, tr, td {
   padding: 5px;
 }
 
@@ -36,11 +36,7 @@ pre {
 }
 
 .onzichtbaar { 
-    display: none; 
-}
-
-.zichtbaar { 
-    display: ""; 
+    display: none;
 }
 
 /* CSS voor dropdown menu */
@@ -74,7 +70,6 @@ nav a {
 	text-decoration: none;
 	-webkit-transition: all .25s ease;
 	-moz-transition: all .25s ease;
-	-ms-transition: all .25s ease;
 	-o-transition: all .25s ease;
 	transition: all .25s ease;
 }
