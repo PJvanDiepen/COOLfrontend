@@ -60,6 +60,7 @@ console.log(`Achternaam van Peter is ${peter.lastName}`);
 console.log(`Bijnaam van Peter is ${peter.bijnaam}`);
 peter.bijnaam = 'Petertje';
 console.log(`Bijnaam van Peter is veranderd in ${peter.bijnaam}`);
+peter.fullName = "PvD";
 peter.sayHello();
 peter.fullName('meneer','BoE');
 const katja = Human('Katja', 'Bosschert');
