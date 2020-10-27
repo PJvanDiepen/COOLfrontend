@@ -70,23 +70,25 @@ function geenRanglijst() {
 // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
 // https://www.javascripttutorial.net/javascript-fetch-api/
 
-async function asyncFetch(url) {
+async function asyncFetch(url, process) {
     console.log(`asyncFetch(${url}) begin`);
     let response = await fetch(url);
-    let spelers = await response.json();
     console.log(response.status); // 200
-    spelers.map((speler, i) => {
-        let link = `${naarSpeler}?speler=${speler.knsbNummer}&naam=${speler.naam}`;
-        tabel.appendChild(rij(i + 1, href(link, speler.naam), speler.totaal));
-    });
+    let json = await response.json();
+    json.map(process);
     console.log(`asyncFetch(${url}) einde`);
 }
 
 function ranglijst() {
     seizoenKop.innerHTML = "Seizoen " + seizoenVoluit(seizoen);
     console.log("ranglijst begin");
-    asyncFetch(api + "/ranglijst/" + seizoen);
+    asyncFetch(api + "/ranglijst/" + seizoen, verwerkSpeler);
     console.log("ranglijst einde");
+}
+
+function verwerkSpeler(speler, i) {
+    let link = `${naarSpeler}?speler=${speler.knsbNummer}&naam=${speler.naam}`;
+    tabel.appendChild(rij(i + 1, href(link, speler.naam), speler.totaal));
 }
 
 function option(value, text) {
