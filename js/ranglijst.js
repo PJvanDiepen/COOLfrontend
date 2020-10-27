@@ -36,6 +36,40 @@ const tabel = document.getElementById("spelers");
 const naarSpeler = new URL(location.href).pathname.replace("ranglijst.html","speler.html");
 ranglijst();
 
+// https://css-tricks.com/the-flavors-of-object-oriented-programming-in-javascript/
+// https://blog.logrocket.com/how-to-decide-between-classes-v-closures-in-javascript/
+// 13. How Generators Work
+// 17. How Class Free Works
+// Douglas Crockford (2018): How JavaScripts Works
+
+function Human (firstName, lastName) {
+    let bijnaam = firstName;
+    return {
+        bijnaam,
+        sayHello() {
+            console.log(`Hallo, ik ben ${firstName}!`);
+        },
+        fullName(title) {
+            console.log(`Mijn naam is ${title} ${firstName} ${lastName}.`);
+        }
+    };
+}
+
+const peter = Human('Peter', 'van Diepen');
+console.log(`Achternaam van Peter is ${peter.lastName}`);
+console.log(`Bijnaam van Peter is ${peter.bijnaam}`);
+peter.bijnaam = 'Petertje';
+console.log(`Bijnaam van Peter is veranderd in ${peter.bijnaam}`);
+peter.sayHello();
+peter.fullName('meneer','BoE');
+const katja = Human('Katja', 'Bosschert');
+katja.sayHello();
+peter.sayHello();
+katja.fullName('mevrouw');
+peter.fullName();
+
+///////////////////////
+
 function seizoenOpties() {
     fetch(api + "/seizoenen") // verschillende seizoenen in Speler tabel
         .then(response => response.json())
