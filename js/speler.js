@@ -33,16 +33,13 @@ uitslagenlijst();
 /*
  Fetch JSON uitslagen en verwerk die met uitslagRij tot rijen voor de uitslagen tabel.
  */
+
 function uitslagenlijst() {
-    console.log(`uitslagenlijst seizoen=${seizoen} speler=${speler}`);
     let totaal = 300;
-    fetch(api + "/uitslagen/" + seizoen + "/" + speler)
-        .then(response => response.json())
-        .then(uitslagen => {
-            uitslagen.map((uitslag) => {
-                totaal = totaal + uitslag.punten;
-                tabel.appendChild(uitslagRij(uitslag, totaal));
-            });
+    asyncFetch(api + "/uitslagen/" + seizoen + "/" + speler,
+        (uitslag) => {
+            totaal = totaal + uitslag.punten;
+            tabel.appendChild(uitslagRij(uitslag, totaal));
         });
 }
 
@@ -110,25 +107,4 @@ function voorloopNul(getal) {
 
 function teamVoluit(teamCode) {
     return schaakVereniging + (teamCode.substring(1) === 'be' ? " " : " " + teamCode);
-}
-
-function rij(...kolommen) {
-    let tr = document.createElement('tr');
-    kolommen.map(kolom => {
-        let td = document.createElement('td');
-        if (kolom.nodeType === Node.ELEMENT_NODE) {
-            td.appendChild(kolom);
-        } else {
-            td.innerHTML = kolom;
-        }
-        tr.appendChild(td);
-    });
-    return tr;
-}
-
-function href(link, text) {
-    let a = document.createElement('a');
-    a.appendChild(document.createTextNode(text));
-    a.href = link;
-    return a;
 }

@@ -36,49 +36,10 @@ const tabel = document.getElementById("spelers");
 const naarSpeler = new URL(location.href).pathname.replace("ranglijst.html","speler.html");
 ranglijst();
 
-// https://css-tricks.com/the-flavors-of-object-oriented-programming-in-javascript/
-// https://blog.logrocket.com/how-to-decide-between-classes-v-closures-in-javascript/
-// 13. How Generators Work
-// 17. How Class Free Works
-// Douglas Crockford (2018): How JavaScripts Works
-
-function Human (firstName, lastName) {
-    let bijnaam = firstName;
-    return {
-        bijnaam,
-        sayHello() {
-            console.log(`Hallo, ik ben ${firstName}!`);
-        },
-        fullName(title) {
-            console.log(`Mijn naam is ${title} ${firstName} ${lastName}.`);
-        }
-    };
-}
-
-const peter = Human('Peter', 'van Diepen');
-console.log(`Achternaam van Peter is ${peter.lastName}`);
-console.log(`Bijnaam van Peter is ${peter.bijnaam}`);
-peter.bijnaam = 'Petertje';
-console.log(`Bijnaam van Peter is veranderd in ${peter.bijnaam}`);
-peter.fullName = "PvD";
-peter.sayHello();
-peter.fullName('meneer','BoE');
-const katja = Human('Katja', 'Bosschert');
-katja.sayHello();
-peter.sayHello();
-katja.fullName('mevrouw');
-peter.fullName();
-
-///////////////////////
-
 function seizoenOpties() {
-    fetch(api + "/seizoenen") // verschillende seizoenen in Speler tabel
-        .then(response => response.json())
-        .then(spelerSeizoenen => {
-            spelerSeizoenen.map(
-                (spelerSeizoen) => {
-                seizoenSelecteren.appendChild(option(spelerSeizoen.seizoen, seizoenVoluit(spelerSeizoen.seizoen)));
-            });
+    asyncFetch(api + "/seizoenen",
+        (spelerSeizoen) => {
+            seizoenSelecteren.appendChild(option(spelerSeizoen.seizoen, seizoenVoluit(spelerSeizoen.seizoen)));
         });
 }
 
@@ -102,54 +63,11 @@ function geenRanglijst() {
     }
 }
 
-// https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-// https://www.javascripttutorial.net/javascript-fetch-api/
-
-async function asyncFetch(url, process) {
-    console.log(`asyncFetch(${url}) begin`);
-    let response = await fetch(url);
-    console.log(response.status); // 200
-    let json = await response.json();
-    json.map(process);
-    console.log(`asyncFetch(${url}) einde`);
-}
-
 function ranglijst() {
     seizoenKop.innerHTML = "Seizoen " + seizoenVoluit(seizoen);
-    console.log("ranglijst begin");
-    asyncFetch(api + "/ranglijst/" + seizoen, verwerkSpeler);
-    console.log("ranglijst einde");
-}
-
-function verwerkSpeler(speler, i) {
-    let link = `${naarSpeler}?speler=${speler.knsbNummer}&naam=${speler.naam}`;
-    tabel.appendChild(rij(i + 1, href(link, speler.naam), speler.totaal));
-}
-
-function option(value, text) {
-    let option = document.createElement('option');
-    option.value = value;
-    option.text = text;
-    return option;
-}
-
-function rij(...kolommen) {
-    let tr = document.createElement('tr');
-    kolommen.map(kolom => {
-        let td = document.createElement('td');
-        if (kolom.nodeType === Node.ELEMENT_NODE) {
-            td.appendChild(kolom);
-        } else {
-            td.innerHTML = kolom;
-        }
-        tr.appendChild(td);
-    });
-    return tr;
-}
-
-function href(link, text) {
-    let a = document.createElement('a');
-    a.appendChild(document.createTextNode(text));
-    a.href = link;
-    return a;
+    asyncFetch(api + "/ranglijst/" + seizoen,
+        (speler, i) => {
+            let link = `${naarSpeler}?speler=${speler.knsbNummer}&naam=${speler.naam}`;
+            tabel.appendChild(rij(i + 1, href(link, speler.naam), speler.totaal));
+        });
 }
