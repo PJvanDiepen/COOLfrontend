@@ -9,18 +9,12 @@ ranglijst.html:
 - h1 id="seizoen"
 - table id="spelers"
 
-URL searchParams:
+functions.js:
 - schaakVereniging
 
 in localStarage:
-- schaakVereniging
 - seizoen
  */
-const params = (new URL(document.location)).searchParams;
-const schaakVereniging = params.get('schaakVereniging');
-localStorage.setItem("schaakVereniging", schaakVereniging);
-
-const api = "http://localhost:3000";
 
 const ranglijstKop = document.getElementById("ranglijst");
 ranglijstKop.innerHTML = "Ranglijst " + schaakVereniging;
@@ -28,18 +22,17 @@ ranglijstKop.innerHTML = "Ranglijst " + schaakVereniging;
 const seizoenKop = document.getElementById("seizoen");
 const seizoenSelecteren = document.getElementById("seizoenSelecteren");
 const geenSeizoen = seizoenSelecteren.value;
-let seizoen = localStorage.getItem("seizoen");
 seizoenOpties();
 seizoenSelecteren.addEventListener("input", anderSeizoen);
 
 const tabel = document.getElementById("spelers");
-const naarSpeler = new URL(location.href).pathname.replace("ranglijst.html","speler.html");
+const naarSpeler = url.pathname.replace("ranglijst.html","speler.html");
 ranglijst();
 
 function seizoenOpties() {
-    asyncFetch(api + "/seizoenen",
-        (spelerSeizoen) => {
-            seizoenSelecteren.appendChild(option(spelerSeizoen.seizoen, seizoenVoluit(spelerSeizoen.seizoen)));
+    asyncFetch("/seizoenen",
+        (seizoen) => {
+            seizoenSelecteren.appendChild(option(seizoen.seizoen, seizoenVoluit(seizoen.seizoen)));
         });
 }
 
@@ -65,9 +58,9 @@ function geenRanglijst() {
 
 function ranglijst() {
     seizoenKop.innerHTML = "Seizoen " + seizoenVoluit(seizoen);
-    asyncFetch(api + "/ranglijst/" + seizoen,
+    asyncFetch("/ranglijst/" + seizoen,
         (speler, i) => {
-            let link = `${naarSpeler}?speler=${speler.knsbNummer}&naam=${speler.naam}`;
-            tabel.appendChild(rij(i + 1, href(link, speler.naam), speler.totaal));
+            let linkSpeler = href(speler.naam,`${naarSpeler}?speler=${speler.knsbNummer}&naam=${speler.naam}`);
+            tabel.appendChild(rij(i + 1, linkSpeler, speler.totaal));
         });
 }

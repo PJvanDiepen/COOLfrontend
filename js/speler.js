@@ -7,26 +7,22 @@ speler.html:
 - h1 id="naam"
 - table id="uitslagen"
 
+functions.js:
+- schaakVereniging
+- seizoen
+
 URL searchParams:
 - speler
 - naam
-
-in localStarage:
-- schaakVereniging
-- seizoen
  */
-const url = new URL(location);
-const api = url.host.match("localhost") ? "http://localhost:3000" : "https://chessopenings.online";
 
-const params = url.searchParams;
 const naam = document.getElementById("naam");
-naam.innerHTML = params.get('naam');
+naam.innerHTML = params.get("naam");
 const speler = params.get('speler'); // knsbNummer
-const schaakVereniging = localStorage.getItem("schaakVereniging");
-const seizoen = localStorage.getItem("seizoen")
 
 const tabel = document.getElementById("uitslagen");
 const naarSpeler = url.pathname;
+const naarRonde = naarSpeler.replace("speler.html","ronde.html");
 const naarTeam = naarSpeler.replace("speler.html","team.html");
 uitslagenlijst();
 
@@ -36,7 +32,7 @@ uitslagenlijst();
 
 function uitslagenlijst() {
     let totaal = 300;
-    asyncFetch(api + "/uitslagen/" + seizoen + "/" + speler,
+    asyncFetch("/uitslagen/" + seizoen + "/" + speler,
         (uitslag) => {
             totaal = totaal + uitslag.punten;
             tabel.appendChild(uitslagRij(uitslag, totaal));
@@ -46,7 +42,7 @@ function uitslagenlijst() {
 /*
 Verwerk een JSON uitslag tot een rij van 8 kolommen.
 
--- punten van alle uitslagen per speler
+  -- punten van alle uitslagen per speler
   select u.datum,
       u.rondeNummer,
       u.bordNummer,
@@ -67,9 +63,9 @@ Verwerk een JSON uitslag tot een rij van 8 kolommen.
       and u.anderTeam = 'int'
   order by u.datum, u.bordNummer;
 
-1. interne ronde
+1. link naar interne ronde
 2. datum
-3. interne tegenstander, externe wedstrijd of andere tekst
+3. link naar interne tegenstander, link naar externe wedstrijd of andere tekst
 4. externe bord
 5. kleur
 6. resultaat
@@ -79,32 +75,20 @@ Verwerk een JSON uitslag tot een rij van 8 kolommen.
 @param u JSON uitslag
 @param totaal punten
  */
-function uitslagRij(u, totaal) {
-    const datum = datumLeesbaar(u.datum);
-    if (u.tegenstanderNummer > TIJDELIJK_LID_NUMMER) {
-        let link = `${naarSpeler}?speler=${u.tegenstanderNummer}&naam=${u.naam}`;
-        return rij(u.rondeNummer, datum, href(link, u.naam), "", u.witZwart, u.resultaat, u.punten, totaal);
-    } else if (u.teamCode === 'int') {
-        return rij(u.rondeNummer, datum, u.naam, "", "", "", u.punten, totaal);
-    } else {
-        let link = `${naarTeam}?team=${u.teamCode}&ronde=${u.rondeNummer}`;
-        let thuis = u.uithuis === 't' ? teamVoluit(u.teamCode) : u.tegenstander;
-        let uit = u.uithuis === 'u' ? teamVoluit(u.teamCode) : u.tegenstander;
-        return rij("", datum, href(link, thuis + " - " + uit), u.bordNummer, u.witZwart, u.resultaat, u.punten, totaal);
-    }
-}
-
 const TIJDELIJK_LID_NUMMER = 100;
 
-function datumLeesbaar(datumJson) {
-    const d = new Date(datumJson);
-    return voorloopNul(d.getDate()) + "-" + voorloopNul(d.getMonth()+1) + "-" + d.getFullYear();
-}
-
-function voorloopNul(getal) {
-    return getal < 10 ? '0'+getal : getal;
-}
-
-function teamVoluit(teamCode) {
-    return schaakVereniging + (teamCode.substring(1) === 'be' ? " " : " " + teamCode);
+function uitslagRij(u, totaal) {
+    let datum = datumLeesbaar(u.datum);
+    let linkRonde = href(u.rondeNummer,`${naarRonde}?ronde=${u.rondeNummer}&datum=${datum}`);
+    if (u.tegenstanderNummer > TIJDELIJK_LID_NUMMER) {
+        let linkSpeler = href(u.naam,`${naarSpeler}?speler=${u.tegenstanderNummer}&naam=${u.naam}`);
+        return rij(linkRonde, datum, linkSpeler, "", u.witZwart, u.resultaat, u.punten, totaal);
+    } else if (u.teamCode === "int") {
+        return rij(linkRonde, datum, u.naam, "", "", "", u.punten, totaal);
+    } else {
+        let thuis = u.uithuis === "t" ? teamVoluit(u.teamCode) : u.tegenstander;
+        let uit = u.uithuis === "u" ? teamVoluit(u.teamCode) : u.tegenstander;
+        let linkTeam = href(`${thuis} - ${uit}`,`${naarTeam}?team=${u.teamCode}&ronde=${u.rondeNummer}`);
+        return rij("", datum, linkTeam, u.bordNummer, u.witZwart, u.resultaat, u.punten, totaal);
+    }
 }

@@ -17,14 +17,6 @@ in localStarage:
 - schaakVereniging
 - seizoen
  */
-
-const params = (new URL(document.location)).searchParams;
 const teamNaam = document.getElementById('team');
 teamNaam.innerHTML = teamVoluit(params.get('team'));
 const rondeNummer = params.get('ronde');
-
-const api = "http://localhost:3000";
-
-function teamVoluit(teamCode) {
-    return localStorage.getItem("schaakVereniging") + " " + teamCode;
-}
