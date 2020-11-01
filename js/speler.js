@@ -24,6 +24,9 @@ const tabel = document.getElementById("uitslagen");
 const naarSpeler = url.pathname;
 const naarRonde = naarSpeler.replace("speler.html","ronde.html");
 const naarTeam = naarSpeler.replace("speler.html","team.html");
+console.log("naarSpeler: " + naarSpeler);
+console.log("naarRonde: " + naarRonde);
+console.log("naarTeam: " + naarTeam);
 uitslagenlijst();
 
 /*
@@ -79,16 +82,16 @@ const TIJDELIJK_LID_NUMMER = 100;
 
 function uitslagRij(u, totaal) {
     let datum = datumLeesbaar(u.datum);
-    let linkRonde = href(u.rondeNummer,`${naarRonde}?ronde=${u.rondeNummer}&datum=${datum}`);
+    let linkRonde = href(u.rondeNummer,`ronde.html?ronde=${u.rondeNummer}&datum=${datum}`);
     if (u.tegenstanderNummer > TIJDELIJK_LID_NUMMER) {
-        let linkSpeler = href(u.naam,`${naarSpeler}?speler=${u.tegenstanderNummer}&naam=${u.naam}`);
+        let linkSpeler = href(u.naam,`speler.html?speler=${u.tegenstanderNummer}&naam=${u.naam}`);
         return rij(linkRonde, datum, linkSpeler, "", u.witZwart, u.resultaat, u.punten, totaal);
     } else if (u.teamCode === "int") {
         return rij(linkRonde, datum, u.naam, "", "", "", u.punten, totaal);
     } else {
         let thuis = u.uithuis === "t" ? teamVoluit(u.teamCode) : u.tegenstander;
         let uit = u.uithuis === "u" ? teamVoluit(u.teamCode) : u.tegenstander;
-        let linkTeam = href(`${thuis} - ${uit}`,`${naarTeam}?team=${u.teamCode}&ronde=${u.rondeNummer}`);
+        let linkTeam = href(`${thuis} - ${uit}`,`team.html?team=${u.teamCode}&ronde=${u.rondeNummer}`);
         return rij("", datum, linkTeam, u.bordNummer, u.witZwart, u.resultaat, u.punten, totaal);
     }
 }
