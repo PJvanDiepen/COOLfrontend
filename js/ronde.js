@@ -8,7 +8,7 @@ ronde.html:
 - h2 id="datum"
 - table id="uitslagen"
 
-functions.js:
+frontend.js:
 - schaakVereniging
 - seizoen
 

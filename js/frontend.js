@@ -1,3 +1,4 @@
+'use strict';
 
 /*
 const
@@ -5,8 +6,6 @@ const
 - api
 - params
 - schaakVereniging
-
-let
 - seizoen
 
 URL searchParams:
@@ -21,7 +20,7 @@ const url = new URL(location);
 const api = url.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 const params = url.searchParams;
 const schaakVereniging = getSchaakVereniging();
-let seizoen = localStorage.getItem("seizoen");
+const seizoen = localStorage.getItem("seizoen");
 
 function getSchaakVereniging() {
     let schaakVereniging = params.get("schaakVereniging");
@@ -93,4 +92,35 @@ function voorloopNul(getal) {
 
 function teamVoluit(teamCode) {
     return schaakVereniging + (teamCode.substring(1) === 'be' ? " " : " " + teamCode);
+}
+
+async function seizoenOpties(seizoenSelecteren) {
+    await asyncFetch("/seizoenen",
+        (seizoen) => {
+            seizoenSelecteren.appendChild(option(seizoen.seizoen, seizoenVoluit(seizoen.seizoen)));
+        });
+    if (seizoen !== null) {
+        seizoenSelecteren.value = seizoen;
+    }
+    seizoenSelecteren.addEventListener("input", anderSeizoen);
+}
+
+function seizoenVoluit(seizoen) {
+    return "20" + seizoen.substring(0,2) + "-20" +  seizoen.substring(2,4);
+}
+
+function anderSeizoen() {
+    localStorage.setItem("seizoen", seizoenSelecteren.value);
+    location.reload();
+}
+
+function ranglijst(tabel) {
+    document.getElementById("ranglijst").innerHTML = schaakVereniging + " " + seizoenVoluit(seizoen);
+    asyncFetch("/ranglijst/" + seizoen,
+        (speler, i) => {
+            tabel.appendChild(rij(
+                i + 1,
+                naarSpeler(speler.knsbNummer,speler.naam),
+                speler.totaal));
+        });
 }

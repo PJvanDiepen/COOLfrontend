@@ -7,10 +7,9 @@
 </head>
 <body>
     <h1 id="ranglijst">Ranglijst</h1>
-    <select id="seizoenSelecteren" class="">
+    <select id="seizoenSelecteren" class="rechts">
         <option value="0000">-- seizoen --</option>
     </select>
-    <h1 id="seizoen">Seizoen</h1>
     <table id="spelers">
         <tr>
             <th></th>
@@ -18,7 +17,10 @@
             <th>totaal</th>
         </tr>
     </table>
-    <script src="js/functions.js"></script>
-    <script src="js/ranglijst.js"></script>
+    <script src="js/frontend.js"></script>
+    <script>
+        seizoenOpties(document.getElementById("seizoenSelecteren"));
+        ranglijst(document.getElementById("spelers"));
+    </script>
 </body>
 </html>

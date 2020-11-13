@@ -1,17 +1,24 @@
+/* https://www.w3schools.com/cssref/css_default_values.asp */
+
 body {
   font-family: sans-serif;
-  font-size: 125%;
+  font-size: 120%;
 }
 
 h1, h2, h3, h4 { 
   color: maroon;           
 }
 
+select {
+	padding: 5px;
+	font-size: 100%; /* van 120% */
+}
+
 table {
   border-collapse: collapse; /* dubbele rand wordt enkele rand */
 }
 
-table, th, td, hr {
+hr, select, table, th, td {
    border: 1px solid maroon;
 }
 
@@ -20,7 +27,6 @@ th, tr, td {
 }
 
 pre {
-/*  font-size: 120%; */
   width: fit-content; /* werkt niet in Explorer en Edge */
   padding: 10px;
   background: seashell;
@@ -70,67 +76,4 @@ a:hover {
 
 a:active {
 	background: #FFFF9F;
-}
-
-/* https://www.inmotionhosting.com/support/edu/website-design/simple-css-drop-down-menu/ */
-/* CSS voor dropdown menu */
-
-nav {
-	position: fixed;
-	top: 0;
-	font-size: 100%;
-	border: 1px solid maroon;
-}
-
-nav ul, nav li {
-	margin: 0;
-	padding: 0;
-}
-nav ul {
-	list-style: none;
-	width: 100%;
-}
-
-nav li {
-	float: left;
-	position: relative;
-	width: auto;
-}
-nav a {
-	background: maroon;
-	color: #FFFFFF; 
-	display: block;
-	padding: 10px 25px;
-	text-align: center;
-	text-decoration: none;
-	-webkit-transition: all .25s ease;
-	-moz-transition: all .25s ease;
-	-o-transition: all .25s ease;
-	transition: all .25s ease;
-}
-nav li:hover a {
-	background: #000000;
-}
-.submenu {
-	left: 0;
-	opacity: 0;
-	position: absolute;
-	top: 39px;
-	visibility: hidden;
-	z-index: 1;
-}
-li:hover ul.submenu {
-	opacity: 1;
-	top: 36px;	/* adjust this as per top nav padding top & bottom comes */
-	visibility: visible;
-}
-.submenu li {
-	float: none;
-	width: 100%;
-}
-.submenu a:hover {
-	background: maroon;
-}
-.submenu a {
-	background-color:#000000;
 }

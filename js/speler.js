@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /*
 Uitslagen en kalender per speler
@@ -7,7 +7,7 @@ speler.html:
 - h1 id="naam"
 - table id="uitslagen"
 
-functions.js:
+frontend.js:
 - schaakVereniging
 - seizoen
 
