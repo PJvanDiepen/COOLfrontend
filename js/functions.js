@@ -74,6 +74,14 @@ function href(text, link) {
     return a;
 }
 
+function naarSpeler(knsbNummer, naam) {
+    return href(naam,`speler.html?speler=${knsbNummer}&naam=${naam}`);
+}
+
+function naarRonde(rondeNummer, datum) {
+    return href(rondeNummer,`ronde.html?ronde=${rondeNummer}&datum=${datum}`);
+}
+
 function datumLeesbaar(datumJson) {
     const d = new Date(datumJson);
     return `${voorloopNul(d.getDate())}-${voorloopNul(d.getMonth()+1)}-${d.getFullYear()}`;

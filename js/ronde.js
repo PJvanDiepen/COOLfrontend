@@ -24,7 +24,6 @@ const datum = document.getElementById("datum");
 datum.innerHTML = params.get("datum");
 
 const tabel = document.getElementById("uitslagen");
-const naarSpeler = url.pathname.replace("ronde.html","speler.html");
 uitslagenlijst();
 /*
   ronde.js
@@ -40,14 +39,14 @@ uitslagenlijst();
   join persoon as wit on uitslag.knsbNummer = wit.knsbNummer
   join persoon as zwart on uitslag.tegenstanderNummer = zwart.knsbNummer
   where seizoen = @seizoen and teamCode = 'int' and rondeNummer = @rondeNummer and witZwart = 'w'
-  order by uitslag.seizoen, rondeNummer, bordNummer;
+  order by uitslag.seizoen, uitslag.bordNummer;
    */
 function uitslagenlijst() {
     asyncFetch("/ronde/" + seizoen + "/" + rondeNummer,
         (u) => {
-            let witSpeler = href(u.wit,`${naarSpeler}?speler=${u.knsbNummer}&naam=${u.wit}`);
-            let zwartSpeler = href(u.zwart,`${naarSpeler}?speler=${u.tegenstanderNummer}&naam=${u.zwart}`);
-            let resultaat = u.resultaat === "1" ? "1-0" : u.resultaat === "0" ? "0-1" : "½-½";
-            tabel.appendChild(rij(witSpeler, zwartSpeler, resultaat));
+            tabel.appendChild(rij(
+                naarSpeler(u.knsbNummer, u.wit),
+                naarSpeler(u.tegenstanderNummer, u.zwart),
+                u.resultaat === "1" ? "1-0" : u.resultaat === "0" ? "0-1" : "½-½"));
         });
 }

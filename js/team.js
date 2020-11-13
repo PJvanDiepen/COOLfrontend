@@ -13,10 +13,11 @@ URL searchParams:
 - team
 - ronde?
 
-in localStarage:
+in localStorage:
 - schaakVereniging
 - seizoen
  */
 const teamNaam = document.getElementById('team');
 teamNaam.innerHTML = teamVoluit(params.get('team'));
 const rondeNummer = params.get('ronde');
+console.log(url);

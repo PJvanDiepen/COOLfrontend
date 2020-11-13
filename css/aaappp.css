@@ -39,10 +39,47 @@ pre {
     display: none;
 }
 
+.zichtbaar {
+	display: block;
+}
+
+/* https://developer.mozilla.org/en-US/docs/Learn/CSS/Styling_text/Styling_links */
+a {
+	outline: none;
+	text-decoration: none;
+	padding: 2px 1px 0;
+}
+
+a:link {
+	color: black;
+}
+
+a:visited {
+	color: black;
+}
+
+a:focus {
+	border-bottom: 1px solid;
+	background: #FFFF9F;
+}
+
+a:hover {
+	border-bottom: 1px solid;
+	/* background: #FFFF9F; */
+}
+
+a:active {
+	background: #FFFF9F;
+}
+
+/* https://www.inmotionhosting.com/support/edu/website-design/simple-css-drop-down-menu/ */
 /* CSS voor dropdown menu */
 
 nav {
 	position: fixed;
+	top: 0;
+	font-size: 100%;
+	border: 1px solid maroon;
 }
 
 nav ul, nav li {
@@ -50,7 +87,6 @@ nav ul, nav li {
 	padding: 0;
 }
 nav ul {
-	/* background: gray; */
 	list-style: none;
 	width: 100%;
 }
@@ -64,7 +100,6 @@ nav a {
 	background: maroon;
 	color: #FFFFFF; 
 	display: block;
-	/* font: bold 12px/20px sans-serif; */ 
 	padding: 10px 25px;
 	text-align: center;
 	text-decoration: none;
