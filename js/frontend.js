@@ -8,10 +8,7 @@ const
 - schaakVereniging
 - seizoen
 
-URL searchParams:
-- schaakVereniging
-
-in localStarage:
+doorgeven:
 - schaakVereniging
 - seizoen
  */
@@ -19,20 +16,14 @@ in localStarage:
 const url = new URL(location);
 const api = url.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 const params = url.searchParams;
-const schaakVereniging = getSchaakVereniging();
-const seizoen = localStorage.getItem("seizoen");
+const schaakVereniging = doorgeven("schaakVereniging");
+const seizoen = doorgeven("seizoen");
+const INTERNE_COMPETITIE = "int";
 
-function getSchaakVereniging() {
-    let schaakVereniging = params.get("schaakVereniging");
-    if (schaakVereniging === null) {
-        schaakVereniging = localStorage.getItem("schaakVereniging");
-    } else {
-        localStorage.setItem("schaakVereniging", schaakVereniging);
-    }
-    if (schaakVereniging === null) {
-        console.error("geen schaakVereniging")
-    }
-    return schaakVereniging;
+function doorgeven(key) {
+    let value = params.get(key) || localStorage.getItem(key);
+    localStorage.setItem(key, value);
+    return value
 }
 
 async function asyncFetch(url, process) {
@@ -94,11 +85,12 @@ function teamVoluit(teamCode) {
     return schaakVereniging + (teamCode.substring(1) === 'be' ? " " : " " + teamCode);
 }
 
-async function seizoenOpties(seizoenSelecteren) {
-    await asyncFetch("/seizoenen",
-        (seizoen) => {
-            seizoenSelecteren.appendChild(option(seizoen.seizoen, seizoenVoluit(seizoen.seizoen)));
+async function seizoenOpties(seizoenSelecteren, teamCode) {
+    await asyncFetch("/seizoenen/" + teamCode,
+        (team) => {
+            seizoenSelecteren.appendChild(option(team.seizoen, seizoenVoluit(team.seizoen)));
         });
+    console.log(seizoenSelecteren.lastChild.value)
     if (seizoen !== null) {
         seizoenSelecteren.value = seizoen;
     }

@@ -66,14 +66,14 @@ a:visited {
 
 a:focus {
 	border-bottom: 1px solid;
-	background: #FFFF9F;
+	background: #F2BA49;
 }
 
 a:hover {
 	border-bottom: 1px solid;
-	/* background: #FFFF9F; */
+	background: #FFFF9F;
 }
 
 a:active {
-	background: #FFFF9F;
+	background: #F2BA49;
 }
