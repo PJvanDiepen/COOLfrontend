@@ -14,12 +14,9 @@
     </style>
 </head>
 <body>
-    <nav class="rechts">
-        <a href="ranglijst.html">Ranglijst</a>
-    </nav>
-    <h1 id="naam"></h1>
-    <h2>Uitslagen</h2>
-    <table id="uitslagen">
+    <h1><a href="ranglijst.html" id="kop">Speler</a></h1>
+    <h2 id="subkop">Uitslagen</h2>
+    <table id="tabel">
         <tr>
             <th>ronde</th>
             <th>datum</th>
@@ -32,6 +29,10 @@
         </tr>
     </table>
     <script src="js/frontend.js"></script>
-    <script src="js/speler.js"></script>
+    <script>
+        const speler = doorgeven("speler"); // knsbNummer
+        const naam = doorgeven("naam");
+        uitslagenSpeler(document.getElementById("kop"), document.getElementById("subkop"), document.getElementById("tabel"));
+    </script>
 </body>
 </html>

@@ -11,12 +11,9 @@
     </style>
 </head>
 <body>
-    <nav class="rechts">
-        <a href="ranglijst.html">Ranglijst</a>
-    </nav>
-    <h1 id="ronde">Ronde</h1>
-    <h2 id="datum"></h2>
-    <table id="uitslagen">
+    <h1><a href="ranglijst.html" id="kop">Ronde</a></h1>
+    <h2 id="subkop"></h2>
+    <table id="tabel">
         <tr>
             <th>wit</th>
             <th>zwart</th>
@@ -24,6 +21,10 @@
         </tr>
     </table>
     <script src="js/frontend.js"></script>
-    <script src="js/ronde.js"></script>
+    <script>
+        const rondeNummer = doorgeven("ronde");
+        const rondeDatum = doorgeven("datum");
+        uitslagenRonde(document.getElementById("kop"), document.getElementById("subkop"), document.getElementById("tabel"));
+    </script>
 </body>
 </html>

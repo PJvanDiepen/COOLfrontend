@@ -6,9 +6,9 @@
     <link rel="stylesheet" type="text/css" href="css/aaappp.css">
 </head>
 <body>
-    <h1 id="ranglijst">Ranglijst</h1>
-    <select id="seizoenSelecteren" class="rechts"></select>
-    <table id="spelers">
+    <h1 id="kop">Ranglijst</h1>
+    <select id="seizoenSelecteren"></select>
+    <table id="tabel" class="links">
         <tr>
             <th></th>
             <th>naam</th>
@@ -18,7 +18,7 @@
     <script src="js/frontend.js"></script>
     <script>
         seizoenOpties(document.getElementById("seizoenSelecteren"), INTERNE_COMPETITIE);
-        ranglijst(document.getElementById("spelers"));
+        ranglijst(document.getElementById("kop"), document.getElementById("tabel"));
     </script>
 </body>
 </html>

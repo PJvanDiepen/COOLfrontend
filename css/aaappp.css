@@ -5,7 +5,7 @@ body {
   font-size: 120%;
 }
 
-h1, h2, h3, h4 { 
+h1, h2, h3, h4 {
   color: maroon;           
 }
 
@@ -41,6 +41,11 @@ pre {
 	margin-left: 20px;
 }
 
+.links {
+	float: left;
+	margin-right: 20px;
+}
+
 .onzichtbaar { 
     display: none;
 }
@@ -50,6 +55,7 @@ pre {
 }
 
 /* https://developer.mozilla.org/en-US/docs/Learn/CSS/Styling_text/Styling_links */
+
 a {
 	outline: none;
 	text-decoration: none;
@@ -57,11 +63,11 @@ a {
 }
 
 a:link {
-	color: black;
+	color: inherit;
 }
 
 a:visited {
-	color: black;
+	color: inherit;
 }
 
 a:focus {
