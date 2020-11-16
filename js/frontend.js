@@ -16,11 +16,11 @@ doorgeven:
 const url = new URL(location);
 const api = url.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 const params = url.searchParams;
-localStorage.clear();
 const schaakVereniging = doorgeven("schaakVereniging");
 const seizoen = doorgeven("seizoen");
-const INTERNE_COMPETITIE = "int";
 
+const INTERNE_COMPETITIE = "int";
+const KOP_SCHEIDING = " | ";
 
 function doorgeven(key) {
     let value = params.get(key) || sessionStorage.getItem(key);
@@ -98,7 +98,7 @@ async function seizoenen(seizoenSelecteren, teamCode) {
     seizoenSelecteren.addEventListener("input",
         () => {
             sessionStorage.setItem("seizoen", seizoenSelecteren.value);
-            location.replace(url.pathname); // huidige html zonder searchParams
+            location.replace(url.pathname); // zonder searchParams
         });
 }
 
@@ -109,20 +109,20 @@ function seizoenVoluit(seizoen) {
 async function ronden(rondeSelecteren, teamCode) {
     await asyncFetch("/ronden/" + seizoen + "/" + teamCode,
         (ronde) => {
-            rondeSelecteren.appendChild(option(ronde.rondeNummer, datumLeesbaar(ronde.datum) + " ronde "+ ronde.rondeNummer));
+            rondeSelecteren.appendChild(option(ronde.rondeNummer, datumLeesbaar(ronde.datum) + " ronde " + ronde.rondeNummer));
         });
     if (rondeNummer !== null) {
         rondeSelecteren.value = rondeNummer;
     }
     rondeSelecteren.addEventListener("input",
         () => {
-            sessionStorage.setItem("rondeNummer", rondeSelecteren.value); // TODO rondeDatum
-            location.replace(url.pathname); // huidige html zonder searchParams
+            sessionStorage.setItem("ronde", rondeSelecteren.value);
+            location.replace(url.pathname); // zonder searchParams
         });
 }
 
 function ranglijst(kop, lijst) {
-    kop.innerHTML = schaakVereniging + " " + seizoenVoluit(seizoen);
+    kop.innerHTML = schaakVereniging + KOP_SCHEIDING + seizoenVoluit(seizoen);
     asyncFetch("/ranglijst/" + seizoen,
         (speler, i) => {
             lijst.appendChild(rij(
@@ -146,9 +146,8 @@ function ranglijst(kop, lijst) {
   where seizoen = @seizoen and teamCode = 'int' and rondeNummer = @rondeNummer and witZwart = 'w'
   order by uitslag.seizoen, uitslag.bordNummer;
    */
-function uitslagenRonde(kop, subkop, lijst) {
-    kop.innerHTML = schaakVereniging + " " + seizoenVoluit(seizoen);
-    subkop.innerHTML = rondeDatum + " ronde " + rondeNummer;
+function uitslagenRonde(kop, lijst) {
+    kop.innerHTML = schaakVereniging + KOP_SCHEIDING + seizoenVoluit(seizoen) + KOP_SCHEIDING + "ronde "+ rondeNummer;
     asyncFetch("/ronde/" + seizoen + "/" + rondeNummer,
         (uitslag) => {
             lijst.appendChild(rij(
@@ -162,9 +161,8 @@ function uitslagenRonde(kop, subkop, lijst) {
  Fetch JSON uitslagen en verwerk die met uitslagRij tot rijen voor de uitslagen tabel.
  */
 
-function uitslagenSpeler(kop, subkop, lijst) {
-    kop.innerHTML = schaakVereniging + " " + seizoenVoluit(seizoen);
-    subkop.innerHTML = naam;
+function uitslagenSpeler(kop, lijst) {
+    kop.innerHTML = schaakVereniging + KOP_SCHEIDING + seizoenVoluit(seizoen) + KOP_SCHEIDING + naam;
     let totaal = 300;
     asyncFetch("/uitslagen/" + seizoen + "/" + speler,
         (uitslag) => {
@@ -224,4 +222,33 @@ function uitslagRij(u, totaal) {
         let naarTeam = href(`${thuis} - ${uit}`,`team.html?team=${u.teamCode}&ronde=${u.rondeNummer}/#ronde${u.rondeNummer}`);
         return rij("", datum, naarTeam, u.bordNummer, u.witZwart, u.resultaat, u.punten, totaal);
     }
+}
+
+/*
+-- uitslagen externe competitie per team
+select uitslag.rondeNummer,
+    uitslag.bordNummer,
+    uitslag.witZwart,
+    uitslag.resultaat,
+    uitslag.knsbNummer,
+    persoon.naam,
+    ronde.uithuis,
+    ronde.tegenstander,
+    ronde.plaats,
+    ronde.datum
+from uitslag
+join persoon on uitslag.knsbNummer = persoon.knsbNummer
+join ronde on uitslag.seizoen = ronde.seizoen and uitslag.teamCode = ronde.teamCode and uitslag.rondeNummer = ronde.rondeNummer
+where uitslag.seizoen = @seizoen and uitslag.teamCode = @teamCode
+order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
+ */
+// router.get('/team/:seizoen/:teamCode', async ctx => {
+
+function uitslagenTeam(kop) {
+    kop.innerHTML = schaakVereniging + KOP_SCHEIDING + seizoenVoluit(seizoen) + KOP_SCHEIDING + teamVoluit(teamCode);
+    asyncFetch("/team/" + seizoen + "/" + teamCode,
+        (uitslag) => {
+            // lijst.appendChild(uitslagRij(uitslag, totaal));
+            console.log(uitslag);
+        });
 }

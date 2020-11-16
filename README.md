@@ -21,3 +21,5 @@ Uitleg over
 - [local/sessionstorage cookies 3](https://www.c-sharpcorner.com/UploadFile/cd7c2e/difference-between-local-storage-session-storage-ans-cookie/)
 - [local/sessionstorage cookies 4](https://supertokens.io/blog/cookies-vs-localstorage-for-sessions-everything-you-need-to-know)
 - [local/sessionstorage cookies 5](https://labs.tadigital.com/index.php/2019/05/16/web-security-authentication-cookies-vs-tokens-vs-html5-web-storage/)
+- [pushstate](https://frontendjournal.com/html5-pushstate-and-single-page-apps/)
+- [history api](https://flaviocopes.com/history-api/)

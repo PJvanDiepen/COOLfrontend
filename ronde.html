@@ -12,8 +12,8 @@
 </head>
 <body>
     <h1><a href="ranglijst.html" id="kop">Ronde</a></h1>
-    <h2 id="subkop"></h2>
-    <table id="tabel">
+    <select id="rondeSelecteren"></select>
+    <table id="tabel" class="links">
         <tr>
             <th>wit</th>
             <th>zwart</th>
@@ -23,8 +23,8 @@
     <script src="js/frontend.js"></script>
     <script>
         const rondeNummer = doorgeven("ronde");
-        const rondeDatum = doorgeven("datum");
-        uitslagenRonde(document.getElementById("kop"), document.getElementById("subkop"), document.getElementById("tabel"));
+        ronden(document.getElementById("rondeSelecteren"), INTERNE_COMPETITIE);
+        uitslagenRonde(document.getElementById("kop"), document.getElementById("tabel"));
     </script>
 </body>
 </html>

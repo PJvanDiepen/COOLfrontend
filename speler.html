@@ -15,7 +15,6 @@
 </head>
 <body>
     <h1><a href="ranglijst.html" id="kop">Speler</a></h1>
-    <h2 id="subkop">Uitslagen</h2>
     <select id="seizoenSelecteren"></select>
     <table id="tabel" class="links">
         <tr>
@@ -34,7 +33,7 @@
         seizoenen(document.getElementById("seizoenSelecteren"), INTERNE_COMPETITIE);
         const speler = doorgeven("speler"); // knsbNummer
         const naam = doorgeven("naam");
-        uitslagenSpeler(document.getElementById("kop"), document.getElementById("subkop"), document.getElementById("tabel"));
+        uitslagenSpeler(document.getElementById("kop"), document.getElementById("tabel"));
     </script>
 </body>
 </html>

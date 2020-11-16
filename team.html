@@ -14,119 +14,21 @@
     </style>
 </head>
 <body>
-    <nav class="rechts">
-        <a href="ranglijst.html">Ranglijst</a>
-    </nav>
-    <h1 id="team">Team</h1>
-    <div id="ronde1">
-        <p>ronde</p>
-        <p>1</p>
-        <p>2</p>
-        <p>3</p>
-        <p>4</p>
-        <p>5</p>
-        <p>6</p>
-        <p>7</p>
-        <p>8</p>
-        <hr>
-    </div>
-    <div id="ronde2">
-        <p>ronde</p>
-        <p>1</p>
-        <p>2</p>
-        <p>3</p>
-        <p>4</p>
-        <p>5</p>
-        <p>6</p>
-        <p>7</p>
-        <p>8</p>
-        <hr>
-    </div>
-    <div id="ronde3">
-        <p>ronde</p>
-        <p>1</p>
-        <p>2</p>
-        <p>3</p>
-        <p>4</p>
-        <p>5</p>
-        <p>6</p>
-        <p>7</p>
-        <p>8</p>
-        <hr>
-    </div>
-    <div id="ronde4">
-        <p>ronde</p>
-        <p>1</p>
-        <p>2</p>
-        <p>3</p>
-        <p>4</p>
-        <p>5</p>
-        <p>6</p>
-        <p>7</p>
-        <p>8</p>
-        <hr>
-    </div>
-    <div id="ronde5">
-        <p>ronde</p>
-        <p>1</p>
-        <p>2</p>
-        <p>3</p>
-        <p>4</p>
-        <p>5</p>
-        <p>6</p>
-        <p>7</p>
-        <p>8</p>
-        <hr>
-    </div>
-    <div id="ronde6">
-        <p>ronde</p>
-        <p>1</p>
-        <p>2</p>
-        <p>3</p>
-        <p>4</p>
-        <p>5</p>
-        <p>6</p>
-        <p>7</p>
-        <p>8</p>
-        <hr>
-    </div>
-    <div id="ronde7">
-        <p>ronde</p>
-        <p>1</p>
-        <p>2</p>
-        <p>3</p>
-        <p>4</p>
-        <p>5</p>
-        <p>6</p>
-        <p>7</p>
-        <p>8</p>
-        <hr>
-    </div>
-    <div id="ronde8">
-        <p>ronde</p>
-        <p>1</p>
-        <p>2</p>
-        <p>3</p>
-        <p>4</p>
-        <p>5</p>
-        <p>6</p>
-        <p>7</p>
-        <p>8</p>
-        <hr>
-    </div>
-    <div id="ronde9">
-        <p>ronde</p>
-        <p>1</p>
-        <p>2</p>
-        <p>3</p>
-        <p>4</p>
-        <p>5</p>
-        <p>6</p>
-        <p>7</p>
-        <p>8</p>
-        <hr>
-    </div>
+    <h1><a href="ranglijst.html" id="kop">Team</a></h1>
+    <div id="ronde1"></div>
+    <div id="ronde2"></div>
+    <div id="ronde3"></div>
+    <div id="ronde4"></div>
+    <div id="ronde5"></div>
+    <div id="ronde6"></div>
+    <div id="ronde7"></div>
+    <div id="ronde8"></div>
+    <div id="ronde9"></div>
     <script src="js/frontend.js"></script>
-    <script src="js/team.js"></script>
+    <script>
+        const teamCode = doorgeven("team"); // knsbNummer
+        const rondeNummer = doorgeven("ronde");
+        uitslagenTeam(document.getElementById("kop"));
+    </script>
 </body>
 </html>
