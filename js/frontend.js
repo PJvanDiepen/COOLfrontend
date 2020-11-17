@@ -66,14 +66,6 @@ function href(text, link) {
     return a;
 }
 
-function naarSpeler(knsbNummer, naam) {
-    return href(naam,`speler.html?speler=${knsbNummer}&naam=${naam}`);
-}
-
-function naarRonde(rondeNummer, datum) {
-    return href(rondeNummer,`ronde.html?ronde=${rondeNummer}&datum=${datum}`);
-}
-
 function datumLeesbaar(datumJson) {
     const d = new Date(datumJson);
     return `${voorloopNul(d.getDate())}-${voorloopNul(d.getMonth()+1)}-${d.getFullYear()}`;
@@ -85,6 +77,10 @@ function voorloopNul(getal) {
 
 function teamVoluit(teamCode) {
     return schaakVereniging + (teamCode.substring(1) === 'be' ? " " : " " + teamCode);
+}
+
+function seizoenVoluit(seizoen) {
+    return "20" + seizoen.substring(0,2) + "-20" +  seizoen.substring(2,4);
 }
 
 async function seizoenen(seizoenSelecteren, teamCode) {
@@ -100,10 +96,6 @@ async function seizoenen(seizoenSelecteren, teamCode) {
             sessionStorage.setItem("seizoen", seizoenSelecteren.value);
             location.replace(url.pathname); // zonder searchParams
         });
-}
-
-function seizoenVoluit(seizoen) {
-    return "20" + seizoen.substring(0,2) + "-20" +  seizoen.substring(2,4);
 }
 
 async function ronden(rondeSelecteren, teamCode) {
@@ -130,6 +122,10 @@ function ranglijst(kop, lijst) {
                 naarSpeler(speler.knsbNummer,speler.naam),
                 speler.totaal));
         });
+}
+
+function naarSpeler(knsbNummer, naam) {
+    return href(naam,`speler.html?speler=${knsbNummer}&naam=${naam}`);
 }
 
 /*
@@ -217,11 +213,18 @@ function uitslagRij(u, totaal) {
     } else if (u.teamCode === "int") {
         return rij(naarRonde(u.rondeNummer, datum), datum, u.naam, "", "", "", u.punten, totaal);
     } else {
-        let thuis = u.uithuis === "t" ? teamVoluit(u.teamCode) : u.tegenstander;
-        let uit = u.uithuis === "u" ? teamVoluit(u.teamCode) : u.tegenstander;
-        let naarTeam = href(`${thuis} - ${uit}`,`team.html?team=${u.teamCode}&ronde=${u.rondeNummer}/#ronde${u.rondeNummer}`);
-        return rij("", datum, naarTeam, u.bordNummer, u.witZwart, u.resultaat, u.punten, totaal);
+        return rij("", datum, naarTeam(u), u.bordNummer, u.witZwart, u.resultaat, u.punten, totaal);
     }
+}
+
+function naarRonde(rondeNummer, datum) {
+    return href(rondeNummer,`ronde.html?ronde=${rondeNummer}&datum=${datum}`);
+}
+
+function naarTeam(u) {
+    let thuis = u.uithuis === "t" ? teamVoluit(u.teamCode) : u.tegenstander;
+    let uit = u.uithuis === "u" ? teamVoluit(u.teamCode) : u.tegenstander;
+    return href(`${thuis} - ${uit}`,`team.html?team=${u.teamCode}#ronde${u.rondeNummer}`);
 }
 
 /*
@@ -246,9 +249,21 @@ order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
 
 function uitslagenTeam(kop) {
     kop.innerHTML = schaakVereniging + KOP_SCHEIDING + seizoenVoluit(seizoen) + KOP_SCHEIDING + teamVoluit(teamCode);
+    let rondeNummer = 0;
+    let lijst;
     asyncFetch("/team/" + seizoen + "/" + teamCode,
         (uitslag) => {
+            if (uitslag.rondeNummer > rondeNummer) {
+                rondeNummer = uitslag.rondeNummer;
+                lijst = document.getElementById("ronde" + rondeNummer);
+                console.log("Ronde " + rondeNummer);
+                console.log(uitslag);
+            }
             // lijst.appendChild(uitslagRij(uitslag, totaal));
-            console.log(uitslag);
         });
+}
+
+function rondeLijst(rondeNummer, lijst, uitslag) {
+
+    return lijst;
 }
